@@ -24,7 +24,7 @@
 <meta property="og:description" content="Onix 的系统引导部分学习">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-24T14:27:58.000Z">
-<meta property="article:modified_time" content="2023-02-24T15:19:30.535Z">
+<meta property="article:modified_time" content="2023-02-25T03:56:13.229Z">
 <meta property="article:author" content="LNfromNorth">
 <meta property="article:tag" content="Onix">
 <meta property="article:tag" content="SystemLoad">
@@ -220,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          587 字
+          1.1k 字
         
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          5 分钟
+          10 分钟
         
       </span>
     
@@ -278,7 +278,13 @@
 <p>因为这学期开始学习操作系统课程，去年短短续续写了好久的 Onix 感觉有很多的内容因为知识不足难以进行下去<br>现在开始学习操作系统希望可以重新更加深刻的来看一下这个系统的实现过程，<br>在这几天的学习过程我发现理论和实现之间的壁垒确实很难逾越，如果我们的学习永远都停留在理论的基础上<br>我相信我们很难产生一个深刻的理解和长远的进步的<br>最后：我知道这一年你可能会过的很辛苦，但是过的繁忙本身就是一种幸福！</p>
 </blockquote>
 <h2 id="boot-amp-amp-loader"><a href="#boot-amp-amp-loader" class="headerlink" title="boot &amp;&amp; loader"></a>boot &amp;&amp; loader</h2><h3 id="Boot"><a href="#Boot" class="headerlink" title="Boot"></a>Boot</h3><p>BIOS 在加电自检会将硬盘的主引导扇区读到 <code>0x7c00</code> 的位置，并且跳转到这里进行执行<br>boot.asm 部分长度有限，因为要实现从硬盘中加载引导程序，并且要将长度控制到 512 - 2 (这里的引导程序末尾是 <code>0x55aa</code>)</p>
+<blockquote>
+<p>这里说明一下昨天总结遇到的问题，突然看到将 loader 程序引导之后去判断 <code>0x55aa</code> 有点懵，今天看视频才发现<br>在 loader 中前两个字节的内容就是一个 魔数 <code>0x55aa</code> 这样就解决了昨天的问题<br>至于在 boot 中的末尾魔数是 bios 引导的时候作为第一扇区的结束符号</p>
+</blockquote>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-comment">; boot.asm</span><br>[org <span class="hljs-number">0x7c00</span>]<br><br><span class="hljs-keyword">mov</span> <span class="hljs-built_in">edi</span>, <span class="hljs-number">0x1000</span>  <span class="hljs-comment">; 目标内存</span><br><span class="hljs-keyword">mov</span> <span class="hljs-built_in">ecx</span>, <span class="hljs-number">2</span>       <span class="hljs-comment">; 起始扇区</span><br><span class="hljs-keyword">mov</span> <span class="hljs-built_in">bl</span>, <span class="hljs-number">4</span>        <span class="hljs-comment">; 读取扇区数量</span><br><span class="hljs-keyword">call</span> read_disk<br><br><span class="hljs-keyword">cmp</span> <span class="hljs-built_in">word</span> [<span class="hljs-number">0x1000</span>], <span class="hljs-number">0x55aa</span>  <span class="hljs-comment">; 比较末尾的魔数</span><br><span class="hljs-keyword">jnz</span> error<br><span class="hljs-keyword">jmp</span> <span class="hljs-number">0</span>:<span class="hljs-number">0x1002</span>               <span class="hljs-comment">; 进行 20 位内的跳转</span><br><span class="hljs-symbol"></span><br><span class="hljs-symbol">read_disk:</span> <span class="hljs-comment">; 实现硬盘的读取</span><br><span class="hljs-symbol">print:</span>     <span class="hljs-comment">; 实现打印函数</span><br><span class="hljs-symbol">error:</span>     <span class="hljs-comment">; 错误输出</span><br><br><span class="hljs-built_in">times</span> <span class="hljs-number">510</span> - ($ - $$) <span class="hljs-built_in">db</span> <span class="hljs-number">0</span>   <span class="hljs-comment">; 填充 0 ($ - $$) 计算本号距离程序开始的长度</span><br><span class="hljs-built_in">db</span> <span class="hljs-number">0x55</span>, <span class="hljs-number">0xaa</span>    <span class="hljs-comment">; 结尾魔数</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="loader"><a href="#loader" class="headerlink" title="loader"></a>loader</h3><p>在 boot 中由于长度有限，所以能够做的工作也非常有限，我们只能通过一个简单的<br>引导程序将主引导程序加载进来，再继续后边的操作。<br>在 loader 中我们做的主要工作就是 检测内存大小，开启保护模式，加载内核初始化程序</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">[org <span class="hljs-number">0x1000</span>]<br><span class="hljs-comment">; 实模式状态</span><br><span class="hljs-symbol">detect_memory:</span> ...          <span class="hljs-comment">; 内存检测，形成一个数据结构</span><br><span class="hljs-symbol">prepare_protected_mode:</span> ... <span class="hljs-comment">; 准备进入保护模式</span><br>&lt;print, error&gt;              <span class="hljs-comment">; 基础函数</span><br><span class="hljs-comment">; 保护模式</span><br>[<span class="hljs-meta">bits</span> <span class="hljs-number">32</span>]<br><span class="hljs-symbol">protect_mode:</span> ...           <span class="hljs-comment">; 保护模式操作</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">ax</span>, data_selector   <span class="hljs-comment">; 向段寄存器赋值</span><br>    ...<br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">esp</span>, <span class="hljs-number">0x10000</span>        <span class="hljs-comment">; 设置栈顶</span><br>    read_disk ...           <span class="hljs-comment">; 读入内核初始化程序</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">0x20220205</span>     <span class="hljs-comment">; 设置魔数</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">ebx</span>, ards_count     <span class="hljs-comment">; 定义内存数量</span><br>    <span class="hljs-keyword">jmp</span> <span class="hljs-built_in">dword</span> code_selector:<span class="hljs-number">0x10040</span>  <span class="hljs-comment">; 跳转到内核初始化程序</span><br></code></pre></td></tr></table></figure>
 
                 
               </div>
