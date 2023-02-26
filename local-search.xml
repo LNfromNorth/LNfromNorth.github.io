@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>Onix_MemoryManage</title>
+    <link href="/2023/02/26/Onix-MemoryManage/"/>
+    <url>/2023/02/26/Onix-MemoryManage/</url>
+    
+    <content type="html"><![CDATA[<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>操作系统</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Onix</tag>
+      
+      <tag>asm</tag>
+      
+      <tag>memoryManage</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Kernel</title>
     <link href="/2023/02/26/Kernel/"/>
     <url>/2023/02/26/Kernel/</url>

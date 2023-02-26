@@ -24,7 +24,7 @@
 <meta property="og:description" content="Onix 的内核部分学习">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-26T04:29:17.000Z">
-<meta property="article:modified_time" content="2023-02-26T04:42:52.964Z">
+<meta property="article:modified_time" content="2023-02-26T14:08:57.768Z">
 <meta property="article:author" content="LNfromNorth">
 <meta property="article:tag" content="Onix">
 <meta property="article:tag" content="asm">
@@ -284,6 +284,7 @@
 </blockquote>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">mulitboot header ...     <span class="hljs-comment">; multiboot2 头部</span><br><span class="hljs-symbol">_start:</span><br>    <span class="hljs-keyword">push</span> <span class="hljs-built_in">ebx</span>             <span class="hljs-comment">; 内存数量</span><br>    <span class="hljs-keyword">push</span> <span class="hljs-built_in">eax</span>             <span class="hljs-comment">; 魔数</span><br>    <span class="hljs-keyword">call</span> device_init     <span class="hljs-comment">; 虚拟设备初始化</span><br>    <span class="hljs-keyword">call</span> console_init    <span class="hljs-comment">; 控制台初始化</span><br>    <span class="hljs-keyword">call</span> gdt_init        <span class="hljs-comment">; 全局描述符初始化</span><br>    <span class="hljs-keyword">lgdt</span> [gdt_ptr]       <span class="hljs-comment">; 加载 gdt</span><br>    <span class="hljs-keyword">jmp</span> <span class="hljs-built_in">dword</span> code_selector:_next<br><span class="hljs-symbol">_next:</span><br>    <span class="hljs-keyword">mov</span> *s, data_selector<span class="hljs-comment">; 段寄存器赋值</span><br>    <span class="hljs-keyword">call</span> memory_init     <span class="hljs-comment">; 内存初始化</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">esp</span>, <span class="hljs-number">0x10000</span>     <span class="hljs-comment">; 设置栈顶</span><br>    <span class="hljs-keyword">call</span> kernel_init     <span class="hljs-comment">; 内核初始化</span><br>    <span class="hljs-keyword">jmp</span> $<br></code></pre></td></tr></table></figure>
 
+
                 
               </div>
             
@@ -378,6 +379,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/02/26/Onix-MemoryManage/" title="Onix_MemoryManage">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Onix_MemoryManage</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
