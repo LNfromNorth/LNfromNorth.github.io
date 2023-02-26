@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2023/02/24/LoadSystem/GDT.png">
 <meta property="article:published_time" content="2023-02-24T14:27:58.000Z">
-<meta property="article:modified_time" content="2023-02-25T14:33:09.162Z">
+<meta property="article:modified_time" content="2023-02-26T04:26:38.660Z">
 <meta property="article:author" content="LNfromNorth">
 <meta property="article:tag" content="Onix">
 <meta property="article:tag" content="asm">
@@ -234,7 +234,7 @@
         
         
         
-          30 分钟
+          31 分钟
         
       </span>
     
@@ -280,7 +280,8 @@
                 <h1 id="系统引导"><a href="#系统引导" class="headerlink" title="系统引导"></a>系统引导</h1><blockquote>
 <p>因为这学期开始学习操作系统课程，去年断断续续写了好久的 Onix 感觉有很多的内容因为知识不足难以进行下去<br>现在开始学习操作系统希望可以重新更加深刻的来看一下这个系统的实现过程，<br>在这几天的学习过程我发现理论和实现之间的壁垒确实很难逾越，如果我们的学习永远都停留在理论的基础上<br>我相信我们很难产生一个深刻的理解和长远的进步的<br>最后：我知道这一年你可能会过的很辛苦，但是过的繁忙本身就是一种幸福！</p>
 </blockquote>
-<h2 id="boot-amp-amp-loader"><a href="#boot-amp-amp-loader" class="headerlink" title="boot &amp;&amp; loader"></a>boot &amp;&amp; loader</h2><h3 id="Boot"><a href="#Boot" class="headerlink" title="Boot"></a>Boot</h3><p>BIOS 在加电自检会将硬盘的主引导扇区读到 <code>0x7c00</code> 的位置，并且跳转到这里进行执行<br>boot.asm 部分长度有限，因为要实现从硬盘中加载引导程序，并且要将长度控制到 512 - 2 (这里的引导程序末尾是 <code>0x55aa</code>)</p>
+<h2 id="boot-amp-amp-loader"><a href="#boot-amp-amp-loader" class="headerlink" title="boot &amp;&amp; loader"></a>boot &amp;&amp; loader</h2><p>bootloader 的主要作用就是从 BIOS 加载内核，并且提供内核需要的参数</p>
+<h3 id="Boot"><a href="#Boot" class="headerlink" title="Boot"></a>Boot</h3><p>BIOS 在加电自检会将硬盘的主引导扇区读到 <code>0x7c00</code> 的位置，并且跳转到这里进行执行<br>boot.asm 部分长度有限，因为要实现从硬盘中加载引导程序，并且要将长度控制到 512 - 2 (这里的引导程序末尾是 <code>0x55aa</code>)</p>
 <blockquote>
 <p>这里说明一下昨天总结遇到的问题，突然看到将 loader 程序引导之后去判断 <code>0x55aa</code> 有点懵，今天看视频才发现<br>在 loader 中前两个字节的内容就是一个 魔数 <code>0x55aa</code> 这样就解决了昨天的问题<br>至于在 boot 中的末尾魔数是 bios 引导的时候作为第一扇区的结束符号</p>
 </blockquote>
@@ -401,6 +402,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/02/26/Kernel/" title="Kernel">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kernel</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
