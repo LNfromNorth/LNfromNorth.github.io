@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>GCC_Learn</title>
+    <link href="/2023/02/26/GCC-Learn/"/>
+    <url>/2023/02/26/GCC-Learn/</url>
+    
+    <content type="html"><![CDATA[<h1 id="GCC-相关的学习"><a href="#GCC-相关的学习" class="headerlink" title="GCC 相关的学习"></a>GCC 相关的学习</h1><blockquote><p>关于一些比较基础的使用虽然不是非常的熟练，但是总结在这里还是一种搬来的心态，没有什么必要，这里只记录一些比较有趣的用法</p></blockquote><h2 id="ASM-amp-amp-C-x2F-C"><a href="#ASM-amp-amp-C-x2F-C" class="headerlink" title="ASM &amp;&amp; C&#x2F;C++"></a>ASM &amp;&amp; C&#x2F;C++</h2><p>关于这部分内容的实现方式应该包含很多种，使用内联汇编也是比较好的方式，暂时就只对分开文件进行书写和混合编译的问题进行一个描述</p><h3 id="分文件进行分别编译链接"><a href="#分文件进行分别编译链接" class="headerlink" title="分文件进行分别编译链接"></a>分文件进行分别编译链接</h3><blockquote><p>关于这部分的汇编和 C 程序混合进行编译使用的例子，也是在操作系统学习到的，有些操作我们使用汇编的方式进行实现使用的方法简单，效率会更高，或者说有些内容我们只能使用汇编的代码来进行实现，这种时候我们要将 C 程序和汇编混合进行编译使用，这样两种程序之间的相互调用部分就需要更加有趣的编译方式来进行实现  </p></blockquote><ul><li><p>使用 nasm 进行编译链接的例子,这里在我的实践过程中存在类型不匹配的问题<br>直接使用 gcc 进行链接</p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">main: main.cc hello.asm</span><br>    nasm -f elf hello.asm -o hello.o<br>    gcc main.cc hello.o -o main<br></code></pre></td></tr></table></figure></li><li><p>使用 gcc 编译形成相应的汇编代码，再进行 gcc 的链接</p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">main: main.cc hello.asm</span><br></code></pre></td></tr></table></figure></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工具学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>asm</tag>
+      
+      <tag>C/C++</tag>
+      
+      <tag>gcc/g++</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Onix_MemoryManage</title>
     <link href="/2023/02/26/Onix-MemoryManage/"/>
     <url>/2023/02/26/Onix-MemoryManage/</url>
@@ -37,7 +66,7 @@
     <link href="/2023/02/26/Kernel/"/>
     <url>/2023/02/26/Kernel/</url>
     
-    <content type="html"><![CDATA[<h1 id="内核学习"><a href="#内核学习" class="headerlink" title="内核学习"></a>内核学习</h1><blockquote><p>关于内核的部分其实是十分庞大的，对于各种基础的实现都要在这部分完成，所以这里关于内核的部分这一个章节的内容是非常多的，我会尽可能的缩减内容，做到只展示有用的部分，虽然我对内核部分的一些问题还是非常的混乱,后续关于中断，系统调用，文件系统之类的内容应该会分开进行总结，重要的是掌握原理，而不是代码  </p></blockquote><h2 id="start-内核开始的部分"><a href="#start-内核开始的部分" class="headerlink" title="_start 内核开始的部分"></a>_start 内核开始的部分</h2><blockquote><p>这部分内容也是使用汇编实现跳转之后的内容，如同上一篇中总结的内容一样，我们在进行 multiboot2 的支持之后，将内核的位置向后移动了 64 个字节的位置，用来存放引导头的内容，并进行一个 64 字节的内存对齐。</p></blockquote><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">mulitboot header ...     <span class="hljs-comment">; multiboot2 头部</span><br><span class="hljs-symbol">_start:</span><br>    <span class="hljs-keyword">push</span> <span class="hljs-built_in">ebx</span>             <span class="hljs-comment">; 内存数量</span><br>    <span class="hljs-keyword">push</span> <span class="hljs-built_in">eax</span>             <span class="hljs-comment">; 魔数</span><br>    <span class="hljs-keyword">call</span> device_init     <span class="hljs-comment">; 虚拟设备初始化</span><br>    <span class="hljs-keyword">call</span> console_init    <span class="hljs-comment">; 控制台初始化</span><br>    <span class="hljs-keyword">call</span> gdt_init        <span class="hljs-comment">; 全局描述符初始化</span><br>    <span class="hljs-keyword">lgdt</span> [gdt_ptr]       <span class="hljs-comment">; 加载 gdt</span><br>    <span class="hljs-keyword">jmp</span> <span class="hljs-built_in">dword</span> code_selector:_next<br><span class="hljs-symbol">_next:</span><br>    <span class="hljs-keyword">mov</span> *s, data_selector<span class="hljs-comment">; 段寄存器赋值</span><br>    <span class="hljs-keyword">call</span> memory_init     <span class="hljs-comment">; 内存初始化</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">esp</span>, <span class="hljs-number">0x10000</span>     <span class="hljs-comment">; 设置栈顶</span><br>    <span class="hljs-keyword">call</span> kernel_init     <span class="hljs-comment">; 内核初始化</span><br>    <span class="hljs-keyword">jmp</span> $<br></code></pre></td></tr></table></figure>]]></content>
+    <content type="html"><![CDATA[<h1 id="内核学习"><a href="#内核学习" class="headerlink" title="内核学习"></a>内核学习</h1><blockquote><p>关于内核的部分其实是十分庞大的，对于各种基础的实现都要在这部分完成，所以这里关于内核的部分这一个章节的内容是非常多的，我会尽可能的缩减内容，做到只展示有用的部分，虽然我对内核部分的一些问题还是非常的混乱,后续关于中断，系统调用，文件系统之类的内容应该会分开进行总结，重要的是掌握原理，而不是代码  </p></blockquote><h2 id="start-内核开始的部分"><a href="#start-内核开始的部分" class="headerlink" title="_start 内核开始的部分"></a>_start 内核开始的部分</h2><blockquote><p>这部分内容也是使用汇编实现跳转之后的内容，如同上一篇中总结的内容一样，我们在进行 multiboot2 的支持之后，将内核的位置向后移动了 64 个字节的位置，用来存放引导头的内容，并进行一个 64 字节的内存对齐。</p></blockquote><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">mulitboot header ...     <span class="hljs-comment">; multiboot2 头部</span><br><span class="hljs-symbol">_start:</span><br>    <span class="hljs-keyword">push</span> <span class="hljs-built_in">ebx</span>             <span class="hljs-comment">; 内存数量</span><br>    <span class="hljs-keyword">push</span> <span class="hljs-built_in">eax</span>             <span class="hljs-comment">; 魔数</span><br>    <span class="hljs-keyword">call</span> device_init     <span class="hljs-comment">; 虚拟设备初始化</span><br>    <span class="hljs-keyword">call</span> console_init    <span class="hljs-comment">; 控制台初始化</span><br>    <span class="hljs-keyword">call</span> gdt_init        <span class="hljs-comment">; 全局描述符初始化</span><br>    <span class="hljs-keyword">lgdt</span> [gdt_ptr]       <span class="hljs-comment">; 加载 gdt</span><br>    <span class="hljs-keyword">jmp</span> <span class="hljs-built_in">dword</span> code_selector:_next<br><span class="hljs-symbol">_next:</span><br>    <span class="hljs-keyword">mov</span> *s, data_selector<span class="hljs-comment">; 段寄存器赋值</span><br>    <span class="hljs-keyword">call</span> memory_init     <span class="hljs-comment">; 内存初始化</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">esp</span>, <span class="hljs-number">0x10000</span>     <span class="hljs-comment">; 设置栈顶</span><br>    <span class="hljs-keyword">call</span> kernel_init     <span class="hljs-comment">; 内核初始化</span><br>    <span class="hljs-keyword">jmp</span> $<br></code></pre></td></tr></table></figure><h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><blockquote><p>这部分内容基本还是按照作者的文档在走，因为让我来总结我也没办法进行一个比较好的分类</p></blockquote><ul><li>中断部分</li><li>内存管理</li><li>数据结构</li><li>任务管理</li><li>系统调用</li><li>设备驱动</li><li>用户程序</li><li>文件系统</li></ul>]]></content>
     
     
     <categories>

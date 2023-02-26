@@ -16,24 +16,24 @@
   <meta name="author" content="LNfromNorth">
   <meta name="keywords" content="">
   
-    <meta name="description" content="内存管理">
+    <meta name="description" content="GCC 相关的学习 关于一些比较基础的使用虽然不是非常的熟练，但是总结在这里还是一种搬来的心态，没有什么必要，这里只记录一些比较有趣的用法  ASM &amp;&amp; C&#x2F;C++关于这部分内容的实现方式应该包含很多种，使用内联汇编也是比较好的方式，暂时就只对分开文件进行书写和混合编译的问题进行一个描述 分文件进行分别编译链接 关于这部分的汇编和 C 程序混合进行编译使用的例子，也是在">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Onix_MemoryManage">
-<meta property="og:url" content="http://example.com/2023/02/26/Onix-MemoryManage/index.html">
+<meta property="og:title" content="GCC_Learn">
+<meta property="og:url" content="http://example.com/2023/02/26/GCC-Learn/index.html">
 <meta property="og:site_name" content="LNfromNorth">
-<meta property="og:description" content="内存管理">
+<meta property="og:description" content="GCC 相关的学习 关于一些比较基础的使用虽然不是非常的熟练，但是总结在这里还是一种搬来的心态，没有什么必要，这里只记录一些比较有趣的用法  ASM &amp;&amp; C&#x2F;C++关于这部分内容的实现方式应该包含很多种，使用内联汇编也是比较好的方式，暂时就只对分开文件进行书写和混合编译的问题进行一个描述 分文件进行分别编译链接 关于这部分的汇编和 C 程序混合进行编译使用的例子，也是在">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-02-26T14:09:38.000Z">
-<meta property="article:modified_time" content="2023-02-26T14:10:59.099Z">
+<meta property="article:published_time" content="2023-02-26T14:15:12.000Z">
+<meta property="article:modified_time" content="2023-02-26T14:24:45.119Z">
 <meta property="article:author" content="LNfromNorth">
-<meta property="article:tag" content="Onix">
 <meta property="article:tag" content="asm">
-<meta property="article:tag" content="memoryManage">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta property="article:tag" content="gcc&#x2F;g++">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Onix_MemoryManage - LNfromNorth</title>
+  <title>GCC_Learn - LNfromNorth</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Onix_MemoryManage"></span>
+            <span id="subtitle" data-typed-text="GCC_Learn"></span>
           
         </div>
 
@@ -209,7 +209,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-02-26 22:09" pubdate>
+        <time datetime="2023-02-26 22:15" pubdate>
           2023年2月26日 晚上
         </time>
       </span>
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4 字
+          478 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          1 分钟
+          4 分钟
         
       </span>
     
@@ -270,12 +270,26 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Onix_MemoryManage</h1>
+            <h1 style="display: none">GCC_Learn</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1>
+                <h1 id="GCC-相关的学习"><a href="#GCC-相关的学习" class="headerlink" title="GCC 相关的学习"></a>GCC 相关的学习</h1><blockquote>
+<p>关于一些比较基础的使用虽然不是非常的熟练，但是总结在这里还是一种搬来的心态，没有什么必要，这里只记录一些比较有趣的用法</p>
+</blockquote>
+<h2 id="ASM-amp-amp-C-x2F-C"><a href="#ASM-amp-amp-C-x2F-C" class="headerlink" title="ASM &amp;&amp; C&#x2F;C++"></a>ASM &amp;&amp; C&#x2F;C++</h2><p>关于这部分内容的实现方式应该包含很多种，使用内联汇编也是比较好的方式，暂时就只对分开文件进行书写和混合编译的问题进行一个描述</p>
+<h3 id="分文件进行分别编译链接"><a href="#分文件进行分别编译链接" class="headerlink" title="分文件进行分别编译链接"></a>分文件进行分别编译链接</h3><blockquote>
+<p>关于这部分的汇编和 C 程序混合进行编译使用的例子，也是在操作系统学习到的，有些操作我们使用汇编的方式进行实现使用的方法简单，效率会更高，或者说有些内容我们只能使用汇编的代码来进行实现，这种时候我们要将 C 程序和汇编混合进行编译使用，这样两种程序之间的相互调用部分就需要更加有趣的编译方式来进行实现  </p>
+</blockquote>
+<ul>
+<li><p>使用 nasm 进行编译链接的例子,这里在我的实践过程中存在类型不匹配的问题<br>直接使用 gcc 进行链接</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">main: main.cc hello.asm</span><br>    nasm -f elf hello.asm -o hello.o<br>    gcc main.cc hello.o -o main<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用 gcc 编译形成相应的汇编代码，再进行 gcc 的链接</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">main: main.cc hello.asm</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+
                 
               </div>
             
@@ -293,7 +307,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="category-chain-item">操作系统</a>
+  <a href="/categories/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" class="category-chain-item">工具学习</a>
   
   
 
@@ -308,11 +322,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Onix/">#Onix</a>
-      
         <a href="/tags/asm/">#asm</a>
       
-        <a href="/tags/memoryManage/">#memoryManage</a>
+        <a href="/tags/C-C/">#C/C++</a>
+      
+        <a href="/tags/gcc-g/">#gcc/g++</a>
       
     </div>
   
@@ -324,8 +338,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Onix_MemoryManage</div>
-      <div>http://example.com/2023/02/26/Onix-MemoryManage/</div>
+      <div>GCC_Learn</div>
+      <div>http://example.com/2023/02/26/GCC-Learn/</div>
     </div>
     <div class="license-meta">
       
@@ -369,18 +383,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/02/26/GCC-Learn/" title="GCC_Learn">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">GCC_Learn</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/02/26/Kernel/" title="Kernel">
-                        <span class="hidden-mobile">Kernel</span>
+                      <a href="/2023/02/26/Onix-MemoryManage/" title="Onix_MemoryManage">
+                        <span class="hidden-mobile">Onix_MemoryManage</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
