@@ -16,27 +16,24 @@
   <meta name="author" content="LNfromNorth">
   <meta name="keywords" content="">
   
-    <meta name="description" content="GCC 相关的学习 关于一些比较基础的使用虽然不是非常的熟练，但是总结在这里还是一种搬来的心态，没有什么必要，这里只记录一些比较有趣的用法  ASM &amp;&amp; C&#x2F;C++关于这部分内容的实现方式应该包含很多种，使用内联汇编也是比较好的方式，暂时就只对分开文件进行书写和混合编译的问题进行一个描述 分文件进行分别编译链接 关于这部分的汇编和 C 程序混合进行编译使用的例子，也是在">
+    <meta name="description" content="Others 主要进行总结一些不适合进行集中总结的内容  IO控制io 控制就是对于 IO 命令 in&#x2F;out 的封装，通过汇编进行编写相应的实现函数，通过 C 进行调用，实现一种简单的 IO 控制方式 1234567891011[bits 32]global inbinb:    push epb    mov ebp, esp    xor eax, eax    mov edx,">
 <meta property="og:type" content="article">
-<meta property="og:title" content="GCC_Learn">
-<meta property="og:url" content="http://example.com/2023/02/26/GCC-Learn/index.html">
+<meta property="og:title" content="Onix_Others">
+<meta property="og:url" content="http://example.com/2023/02/27/Onix-Others/index.html">
 <meta property="og:site_name" content="LNfromNorth">
-<meta property="og:description" content="GCC 相关的学习 关于一些比较基础的使用虽然不是非常的熟练，但是总结在这里还是一种搬来的心态，没有什么必要，这里只记录一些比较有趣的用法  ASM &amp;&amp; C&#x2F;C++关于这部分内容的实现方式应该包含很多种，使用内联汇编也是比较好的方式，暂时就只对分开文件进行书写和混合编译的问题进行一个描述 分文件进行分别编译链接 关于这部分的汇编和 C 程序混合进行编译使用的例子，也是在">
+<meta property="og:description" content="Others 主要进行总结一些不适合进行集中总结的内容  IO控制io 控制就是对于 IO 命令 in&#x2F;out 的封装，通过汇编进行编写相应的实现函数，通过 C 进行调用，实现一种简单的 IO 控制方式 1234567891011[bits 32]global inbinb:    push epb    mov ebp, esp    xor eax, eax    mov edx,">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/02/26/GCC-Learn/StackFrame.png">
-<meta property="article:published_time" content="2023-02-26T14:15:12.000Z">
-<meta property="article:modified_time" content="2023-02-27T04:14:33.168Z">
+<meta property="article:published_time" content="2023-02-27T04:13:41.000Z">
+<meta property="article:modified_time" content="2023-02-27T04:22:21.024Z">
 <meta property="article:author" content="LNfromNorth">
+<meta property="article:tag" content="Onix">
 <meta property="article:tag" content="asm">
-<meta property="article:tag" content="C&#x2F;C++">
-<meta property="article:tag" content="gcc&#x2F;g++">
-<meta property="article:tag" content="栈帧">
+<meta property="article:tag" content="显卡驱动">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2023/02/26/GCC-Learn/StackFrame.png">
   
   
   
-  <title>GCC_Learn - LNfromNorth</title>
+  <title>Onix_Others - LNfromNorth</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="GCC_Learn"></span>
+            <span id="subtitle" data-typed-text="Onix_Others"></span>
           
         </div>
 
@@ -212,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-02-26 22:15" pubdate>
-          2023年2月26日 晚上
+        <time datetime="2023-02-27 12:13" pubdate>
+          2023年2月27日 中午
         </time>
       </span>
     
@@ -224,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          206 字
         
       </span>
     
@@ -235,7 +232,7 @@
         
         
         
-          10 分钟
+          2 分钟
         
       </span>
     
@@ -273,51 +270,18 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">GCC_Learn</h1>
+            <h1 style="display: none">Onix_Others</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="GCC-相关的学习"><a href="#GCC-相关的学习" class="headerlink" title="GCC 相关的学习"></a>GCC 相关的学习</h1><blockquote>
-<p>关于一些比较基础的使用虽然不是非常的熟练，但是总结在这里还是一种搬来的心态，没有什么必要，这里只记录一些比较有趣的用法</p>
+                <h1 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h1><blockquote>
+<p>主要进行总结一些不适合进行集中总结的内容</p>
 </blockquote>
-<h2 id="ASM-amp-amp-C-x2F-C"><a href="#ASM-amp-amp-C-x2F-C" class="headerlink" title="ASM &amp;&amp; C&#x2F;C++"></a>ASM &amp;&amp; C&#x2F;C++</h2><p>关于这部分内容的实现方式应该包含很多种，使用内联汇编也是比较好的方式，暂时就只对分开文件进行书写和混合编译的问题进行一个描述</p>
-<h3 id="分文件进行分别编译链接"><a href="#分文件进行分别编译链接" class="headerlink" title="分文件进行分别编译链接"></a>分文件进行分别编译链接</h3><blockquote>
-<p>关于这部分的汇编和 C 程序混合进行编译使用的例子，也是在操作系统学习到的，有些操作我们使用汇编的方式进行实现使用的方法简单，效率会更高，或者说有些内容我们只能使用汇编的代码来进行实现，这种时候我们要将 C 程序和汇编混合进行编译使用，这样两种程序之间的相互调用部分就需要更加有趣的编译方式来进行实现  </p>
-</blockquote>
-<ul>
-<li><p>使用 nasm 进行编译链接的例子,这里在我的实践过程中存在类型不匹配的问题<br>直接使用 gcc 进行链接</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">main: main.cc hello.asm</span><br>    nasm -f elf hello.asm -o hello.o<br>    gcc main.cc hello.o -o main<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>使用 gcc 编译形成相应的汇编代码，再进行 gcc 的链接</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">main: main.cc hello.asm</span><br>    ...<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>使用链接指令进行直接链接<br>这种方法是 Onix 中作者使用的方式，这种方式使用 i386 的同一个是进行编译链接，我重现场景的工作有些困难，所以就没有做到，不能实现在现在的系统上进行运行<br>在编译过程使用非常多的编译控制指令，将程序控制到一个可以链接的状态</p>
-</li>
-</ul>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">%.o: %.asm</span><br>    nasm ...<br><span class="hljs-section">%.o: %.c</span><br>    gcc ...<br><span class="hljs-section">kernel.bin: *.o</span><br>    ld ...<br></code></pre></td></tr></table></figure>
+<h2 id="IO控制"><a href="#IO控制" class="headerlink" title="IO控制"></a>IO控制</h2><p>io 控制就是对于 IO 命令 in&#x2F;out 的封装，通过汇编进行编写相应的实现函数，通过 C 进行调用，实现一种简单的 IO 控制方式</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">[<span class="hljs-meta">bits</span> <span class="hljs-number">32</span>]<br><span class="hljs-meta">global</span> inb<br><span class="hljs-symbol">inb:</span><br>    <span class="hljs-keyword">push</span> epb<br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">ebp</span>, <span class="hljs-built_in">esp</span><br>    <span class="hljs-keyword">xor</span> <span class="hljs-built_in">eax</span>, <span class="hljs-built_in">eax</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">edx</span>, [<span class="hljs-built_in">ebp</span> + <span class="hljs-number">8</span>]<br>    <span class="hljs-keyword">in</span> <span class="hljs-built_in">al</span>, <span class="hljs-built_in">dx</span><br>    <span class="hljs-keyword">jmp</span> $ + <span class="hljs-number">2</span>             <span class="hljs-comment">; * 3 加入延迟</span><br>    <span class="hljs-keyword">leave</span>                 <span class="hljs-comment">; 恢复栈帧</span><br>    <span class="hljs-keyword">ret</span><br></code></pre></td></tr></table></figure>
 
-<h4 id="栈帧问题"><a href="#栈帧问题" class="headerlink" title="栈帧问题"></a>栈帧问题</h4><blockquote>
-<p>讲到汇编和 C 程序的链接问题之后就可以比较自然的过渡到栈帧的问题了，关于栈帧曾经做了很多的总结，但是总体来看理解还是不够深刻，现在对于程序的调用有了一个基本的认识，但是还有一些问题没有解决，比如一个程序调用的返回值的存储位置问题，需要继续学习</p>
-</blockquote>
-<img src="/2023/02/26/GCC-Learn/StackFrame.png" srcset="/img/loading.gif" lazyload class="" title="StackFrame">
-
-<ul>
-<li>栈帧结构<ul>
-<li>函数的返回地址和参数</li>
-<li>临时变量，包括函数的非静态局部变量以及编译器自动生成的其他临时变量</li>
-<li>函数调用的上下文</li>
-</ul>
-</li>
-<li>栈帧寄存器<ul>
-<li>ebp 帧指针，指向当前栈帧的底部</li>
-<li>esp 栈指针，直线当前栈帧的顶部</li>
-</ul>
-</li>
-<li>实现代码操作<br>栈帧问题就是关于函数调用过程中的栈结构问题，在我们程序进入一个函数的时候，ebp 始终指向当前函数的栈底位置（相对于 esp 指向栈顶而言），这样我们对于函数的返回位置可以有一个比较好的确定方式。<br>在这种基础之下，我们在进行函数调用的时候，就要考虑到对于返回位置的确定方式，由此我们在进入一个函数的时候，首先做的就是将上一个函数的 ebp 进行保存（在这里我们的 ebp 的指向是调用函数的栈顶位置)，之后在将 ebp 的内容赋值成为当前被调用函数的栈顶位置 esp，完成一次栈帧的初始工作。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs x85asm">func:<br>    push ebp<br>    mov ebp, esp<br>    ......<br>    mov esp, ebp<br>    pop ebp<br>    ret<br></code></pre></td></tr></table></figure>
-
+<h2 id="显卡驱动"><a href="#显卡驱动" class="headerlink" title="显卡驱动"></a>显卡驱动</h2>
                 
               </div>
             
@@ -325,38 +289,15 @@
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" class="category-chain-item">工具学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
+        <a href="/tags/Onix/">#Onix</a>
+      
         <a href="/tags/asm/">#asm</a>
       
-        <a href="/tags/C-C/">#C/C++</a>
-      
-        <a href="/tags/gcc-g/">#gcc/g++</a>
-      
-        <a href="/tags/%E6%A0%88%E5%B8%A7/">#栈帧</a>
+        <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/">#显卡驱动</a>
       
     </div>
   
@@ -368,8 +309,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>GCC_Learn</div>
-      <div>http://example.com/2023/02/26/GCC-Learn/</div>
+      <div>Onix_Others</div>
+      <div>http://example.com/2023/02/27/Onix-Others/</div>
     </div>
     <div class="license-meta">
       
@@ -381,7 +322,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年2月26日</div>
+          <div>2023年2月27日</div>
         </div>
       
       
@@ -413,18 +354,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/02/27/Onix-Others/" title="Onix_Others">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Onix_Others</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/02/26/Onix-MemoryManage/" title="Onix_MemoryManage">
-                        <span class="hidden-mobile">Onix_MemoryManage</span>
+                      <a href="/2023/02/26/GCC-Learn/" title="GCC_Learn">
+                        <span class="hidden-mobile">GCC_Learn</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
